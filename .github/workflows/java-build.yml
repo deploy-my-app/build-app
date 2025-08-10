@@ -1,14 +1,16 @@
 name: "Java Build and Deploy"
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       repo_name:
         description: 'Name of the repository'
         required: true
+        type: string
       repo_owner:
         description: 'Owner of the repository'
         required: true
+        type: string
 
 jobs:
   build-deploy:
