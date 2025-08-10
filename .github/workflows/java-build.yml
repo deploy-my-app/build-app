@@ -11,6 +11,13 @@ on:
         description: 'Owner of the repository'
         required: true
         type: string
+    secrets:
+      app_id:
+        description: 'GitHub App ID'
+        required: true
+      app_key:
+        description: 'GitHub App Private Key'
+        required: true
 
 jobs:
   build-deploy:
@@ -20,8 +27,8 @@ jobs:
       - uses: actions/create-github-app-token@v2
         id: repo-token
         with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_KEY }}
+          app-id: ${{ secrets.app_id }}
+          private-key: ${{ secrets.app_key }}
           owner: ${{ github.event.inputs.repo_owner }}
           repositories: ${{ github.event.inputs.repo_name }}
 

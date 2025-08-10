@@ -55,3 +55,6 @@ jobs:
     with:
       repo_name: ${{ github.event.inputs.repo_name }}
       repo_owner: ${{ github.event.inputs.repo_owner }}
+    secrets:
+      APP_ID: ${{ secrets.APP_ID }}
+      APP_KEY: ${{ secrets.APP_KEY }}
