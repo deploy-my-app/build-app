@@ -9,9 +9,6 @@ on:
       repo_owner:
         description: 'Owner of the repository'
         required: true
-      github_instance:
-        description: 'GitHub instance URL'
-        required: true
 
 jobs:
   build:
