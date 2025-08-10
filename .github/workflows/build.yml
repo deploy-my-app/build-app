@@ -1,0 +1,41 @@
+name: "Build and Deploy"
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_name:
+        description: 'Name of the repository'
+        required: true
+      repo_owner:
+        description: 'Owner of the repository'
+        required: true
+      github_instance:
+        description: 'GitHub instance URL'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: repo-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_KEY }}
+          owner: ${{ github.event.inputs.repo_owner }}
+          repositories: ${{ github.event.inputs.repo_name }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.repo_owner }}/${{ github.event.inputs.repo_name }}
+          token: ${{ steps.repo-token.outputs.token }}
+
+      - name: Build project
+        run: mvn clean package -DskipTests
+
+      - name: Deploy
+        run: |
+          echo "Deploying application..."
+          ls -l target
+          # Add your deployment commands here
