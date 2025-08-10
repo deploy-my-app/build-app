@@ -45,9 +45,10 @@ jobs:
             echo "language=unknown" >> $GITHUB_ENV
           fi
 
-      - name: Trigger java build
-        if: env.language == 'java'
-        uses: ./.github/workflows/java-build.yml
-        with:
-          repo_name: ${{ github.event.inputs.repo_name }}
-          repo_owner: ${{ github.event.inputs.repo_owner }}
+  build:
+    needs: dispatcher
+    if: needs.dispatcher.outputs.language == 'java'
+    uses: ./.github/workflows/java-build.yml
+    with:
+      repo_name: ${{ github.event.inputs.repo_name }}
+      repo_owner: ${{ github.event.inputs.repo_owner }}
