@@ -33,16 +33,16 @@ jobs:
         run: |
           if [ -f "pom.xml" ]; then
             echo "Maven project detected."
-            echo "language=java" >> $GITHUB_ENV
+            echo "language=java" >> $GITHUB_OUTPUT
           elif [ -f "package.json" ]; then
             echo "Node.js project detected."
-            echo "language=node" >> $GITHUB_ENV
+            echo "language=node" >> $GITHUB_OUTPUT
           elif [ -f "requirements.txt" ]; then
             echo "Python project detected."
-            echo "language=python" >> $GITHUB_ENV
+            echo "language=python" >> $GITHUB_OUTPUT
           else
             echo "No supported project files found."
-            echo "language=unknown" >> $GITHUB_ENV
+            echo "language=unknown" >> $GITHUB_OUTPUT
           fi
 
   build:
