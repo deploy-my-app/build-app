@@ -32,6 +32,7 @@ jobs:
           token: ${{ steps.repo-token.outputs.token }}
 
       - name: Detect language (java, node, python)
+        id: detect-language
         run: |
           if [ -f "pom.xml" ]; then
             echo "Maven project detected."
