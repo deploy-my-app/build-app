@@ -48,7 +48,7 @@ jobs:
             echo "language=unknown" >> $GITHUB_OUTPUT
           fi
 
-  build:
+  java:
     needs: dispatcher
     if: needs.dispatcher.outputs.language == 'java'
     uses: ./.github/workflows/java-build.yml
