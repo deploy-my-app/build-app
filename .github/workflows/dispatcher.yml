@@ -14,6 +14,8 @@ jobs:
   dispatcher:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    outputs:
+      language: ${{ steps.detect-language.outputs.language }}
     steps:
       - uses: actions/create-github-app-token@v2
         id: repo-token
