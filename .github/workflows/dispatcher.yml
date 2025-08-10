@@ -1,0 +1,53 @@
+name: "Dispatcher"
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_name:
+        description: 'Name of the repository'
+        required: true
+      repo_owner:
+        description: 'Owner of the repository'
+        required: true
+
+jobs:
+  dispatcher:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: repo-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_KEY }}
+          owner: ${{ github.event.inputs.repo_owner }}
+          repositories: ${{ github.event.inputs.repo_name }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.repo_owner }}/${{ github.event.inputs.repo_name }}
+          token: ${{ steps.repo-token.outputs.token }}
+
+      - name: Detect language (java, node, python)
+        run: |
+          if [ -f "pom.xml" ]; then
+            echo "Maven project detected."
+            echo "language=java" >> $GITHUB_ENV
+          elif [ -f "package.json" ]; then
+            echo "Node.js project detected."
+            echo "language=node" >> $GITHUB_ENV
+          elif [ -f "requirements.txt" ]; then
+            echo "Python project detected."
+            echo "language=python" >> $GITHUB_ENV
+          else
+            echo "No supported project files found."
+            echo "language=unknown" >> $GITHUB_ENV
+          fi
+
+      - name: Trigger java build
+        if: env.language == 'java'
+        uses: ./.github/workflows/java-build.yml
+        with:
+          repo_name: ${{ github.event.inputs.repo_name }}
+          repo_owner: ${{ github.event.inputs.repo_owner }}
