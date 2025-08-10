@@ -32,7 +32,13 @@ jobs:
         run: |
           if [ -f "pom.xml" ]; then
             echo "Maven project detected."
-            JAVA_VERSION=$(xmllint --xpath "string(//properties/java.version)" pom.xml 2>/dev/null)
+            JAVA_VERSION=$(grep -m1 '<java.version>' pom.xml | sed -E 's/.*<java.version>([^<]+)<\/java.version>.*/\1/')
+            if [ -z "$JAVA_VERSION" ]; then
+              JAVA_VERSION=$(grep -m1 '<maven.compiler.source>' pom.xml | sed -E 's/.*<maven.compiler.source>([^<]+)<\/maven.compiler.source>.*/\1/')
+            fi
+            if [ -z "$JAVA_VERSION" ]; then
+              JAVA_VERSION="21"
+            fi
             echo "Java version found in pom.xml: $JAVA_VERSION"
           else
             echo "No pom.xml found. Using default Java version."
